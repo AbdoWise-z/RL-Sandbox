@@ -1,4 +1,4 @@
-from stable_baselines3 import DQN
+from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import CheckpointCallback
 from stable_baselines3.common.env_util import make_atari_env
 from stable_baselines3.common.vec_env import VecFrameStack
@@ -47,7 +47,7 @@ class CustomCNN(BaseFeaturesExtractor):
 
 
 # Create and wrap the Atari environment
-env = make_atari_env(env_name, n_envs=1, seed=0)
+env = make_atari_env(env_name, n_envs=4, seed=0)  # Using multiple environments for PPO
 env = VecFrameStack(env, n_stack=4)
 
 # Configure the policy with our custom feature extractor
@@ -55,19 +55,22 @@ policy_kwargs = dict(
     features_extractor_class=CustomCNN,
 )
 
-# Create the DQN model
-model = DQN(
+# Create the PPO model
+model = PPO(
     "CnnPolicy",
     env,
-    learning_rate=0.00025,
-    buffer_size=100000,
-    learning_starts=10000,
-    batch_size=32,
+    learning_rate=2.5e-4,
+    n_steps=128,
+    batch_size=256,
+    n_epochs=4,
     gamma=0.99,
-    target_update_interval=1000,
-    exploration_fraction=0.1,
-    exploration_final_eps=0.1,
-    train_freq=4,
+    gae_lambda=0.95,
+    clip_range=0.1,
+    clip_range_vf=None,
+    normalize_advantage=True,
+    ent_coef=0.01,
+    vf_coef=0.5,
+    max_grad_norm=0.5,
     policy_kwargs=policy_kwargs,
     verbose=1,
 )
@@ -85,7 +88,7 @@ class GCCallback(CheckpointCallback):
 checkpoint_callback = GCCallback(
     save_freq=10000,
     save_path="./models/",
-    name_prefix="dqn"
+    name_prefix="ppo"
 )
 
 # Train the model
@@ -93,5 +96,5 @@ total_timesteps = 1_000_000
 model.learn(total_timesteps=total_timesteps, callback=checkpoint_callback, progress_bar=True)
 
 # Save the final model
-model.save("dqn_final")
+model.save("ppo_final")
 env.close()

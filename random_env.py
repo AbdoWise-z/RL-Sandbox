@@ -1,11 +1,11 @@
 import gymnasium as gym
 import ale_py
-
+from env import env_name
 # Register environment
 gym.register_envs(ale_py)
 
 # Create and wrap the Atari environment
-env = gym.make("ALE/DemonAttack-v5", render_mode="human")
+env = gym.make(env_name, render_mode="human")
 env.reset()
 
 # Render the environment

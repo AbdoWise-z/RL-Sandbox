@@ -1,4 +1,4 @@
-from stable_baselines3 import DQN
+from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_atari_env
 from stable_baselines3.common.vec_env import VecFrameStack
 import numpy as np
@@ -15,7 +15,7 @@ def test_model(model_path, num_episodes=10, render=True):
     env = VecFrameStack(env, n_stack=4)
 
     # Load the trained model
-    model = DQN.load(model_path)
+    model = PPO.load(model_path)
 
     episode_rewards = []
 
@@ -55,7 +55,7 @@ def test_model(model_path, num_episodes=10, render=True):
 
 
 if __name__ == "__main__":
-    model_path = "dqn_final.zip"
+    model_path = "ppo_final.zip"
 
     # Test the model
     rewards = test_model(
