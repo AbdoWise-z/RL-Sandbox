@@ -26,6 +26,7 @@ def test_model(model_path, num_episodes=10, render=True):
 
         while not done:
             # Get model's action
+            print(np.shape(obs))
             action, _ = model.predict(obs, deterministic=True)
 
             # Take step in environment

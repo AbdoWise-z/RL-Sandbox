@@ -11,6 +11,7 @@ env.reset()
 # Render the environment
 for _ in range(1000):  # Run for a few steps to see the rendering
     env.render()
+
     action = env.action_space.sample()  # Random action
     env.step(action)
 
