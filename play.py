@@ -125,7 +125,7 @@ if __name__ == "__main__":
     model_path = "dqn_final.zip"
     rewards = test_model(
         model_path=model_path,
-        num_episodes=1,  # Start with fewer episodes for testing
+        num_episodes=20,  # Start with fewer episodes for testing
         render=True,
         explain_steps=True
     )
